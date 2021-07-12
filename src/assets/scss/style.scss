@@ -1,0 +1,13 @@
+.control-box {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    right: 5px;
+    top: 5px;
+    border-radius: 5px;
+    border: 1px solid salmon;
+    .handle-item {
+        cursor: pointer;
+        border: 1px solid steelblue;
+    }
+}
