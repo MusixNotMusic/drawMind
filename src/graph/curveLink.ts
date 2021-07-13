@@ -1,10 +1,8 @@
 import * as d3 from 'd3'
-import { getDomOffset } from '../constants/utils'
-import DrawActionEvent from '../event/DrawActionEvent.interface'
 import Lifecycle from '../event/Lifecycle'
 import MouseEvent from '../event/MouseEvent'
 
-export default class CurveLink extends MouseEvent implements DrawActionEvent, Lifecycle{
+export default class CurveLink extends MouseEvent implements Lifecycle{
    private mouseDown = false;
    private startX = 0;
    private startY = 0;
@@ -122,5 +120,5 @@ export default class CurveLink extends MouseEvent implements DrawActionEvent, Li
     }
     return path 
   }
-  
+
 }

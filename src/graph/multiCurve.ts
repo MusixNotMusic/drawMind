@@ -1,11 +1,9 @@
 import * as d3 from 'd3'
-import { getDomOffset } from '../constants/utils'
-import DrawActionEvent from '../event/DrawActionEvent.interface'
 import Lifecycle from '../event/Lifecycle'
 import MouseEvent from '../event/MouseEvent'
 import { vectorRadian, vectorMod } from '../constants/tools'
 
-export default class MultiCurve extends MouseEvent implements DrawActionEvent, Lifecycle{
+export default class MultiCurve extends MouseEvent implements Lifecycle{
    private mouseDown = false;
    private startX = 0;
    private startY = 0;

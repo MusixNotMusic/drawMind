@@ -1,11 +1,10 @@
 import * as d3 from 'd3'
-import DrawActionEvent from '../event/DrawActionEvent.interface'
 import Lifecycle from '../event/Lifecycle'
 import MouseEvent from '../event/MouseEvent'
 import { degree2Radian, vectorDegree } from '../constants/tools'
 import { ArrowHeight, HalfArrowDegree, ArrowSlopEdge} from '../constants/box'
 
-export default class Arrow extends MouseEvent implements DrawActionEvent, Lifecycle{
+export default class Arrow extends MouseEvent implements Lifecycle{
    private mouseDown = false;
    private startX = 0;
    private startY = 0;

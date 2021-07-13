@@ -20,3 +20,10 @@ export function getDomOffset(dom: any): Object {
         }
     }
   }
+
+export function parserSvgString (str: string) {
+  var root = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  root.innerHTML = str.trim();
+  return root;
+}
+
