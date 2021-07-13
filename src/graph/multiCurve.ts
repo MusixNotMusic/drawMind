@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { getDomOffset } from './utils'
+import { getDomOffset } from '../constants/utils'
 import DrawActionEvent from '../event/DrawActionEvent.interface'
 import Lifecycle from '../event/Lifecycle'
 import MouseEvent from '../event/MouseEvent'
@@ -9,8 +9,8 @@ export default class MultiCurve extends MouseEvent implements DrawActionEvent, L
    private mouseDown = false;
    private startX = 0;
    private startY = 0;
-   private placeholderX = 0;
-   private placeholderY = 0;
+   public placeholderX = 0;
+   public placeholderY = 0;
    private endX = 0;
    private endY = 0;
    private target: any = null;
@@ -189,30 +189,5 @@ export default class MultiCurve extends MouseEvent implements DrawActionEvent, L
   nearByRadius (x1: number, y1: number, x2: number, y2: number) {
     return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2) <= 10
   }
-
-  getOffsetX(e: any) {
-    if(e.touches) {
-      if (e.touches[0]) {
-        const offset: any =  getDomOffset(this.svgDom)
-        return e.touches[0].pageX - offset.offsetLeft 
-      } else { // touchend
-        return this.placeholderX
-      }
-    } else {
-      return e.offsetX || e.pageX
-    }
-  }
-
-  getOffsetY(e: any) {
-    if(e.touches) {
-      if (e.touches[0]) {
-        const offset: any =  getDomOffset(this.svgDom)
-        return e.touches[0].pageY - offset.offsetTop
-      } else { // touchend
-        return this.placeholderY
-      }
-    } else {
-      return e.offsetY || e.pageY
-    }
-  }
+  
 }
