@@ -1,8 +1,8 @@
 import * as d3 from 'd3'
 import Lifecycle from '../event/Lifecycle'
 import MouseEvent from '../event/MouseEvent'
-import { degree2Radian, vectorDegree } from '../constants/tools'
-import { ArrowHeight, HalfArrowDegree, ArrowSlopEdge} from '../constants/box'
+import { degree2Radian, vectorDegree } from '../constants/math'
+import { ArrowHeight, HalfArrowDegree, ArrowSlopEdge} from '../constants/constant'
 
 export default class Arrow extends MouseEvent implements Lifecycle{
    private mouseDown = false;
@@ -70,10 +70,10 @@ export default class Arrow extends MouseEvent implements Lifecycle{
         let group = d3.select(this.svgDom as Element).append('g')
         this.target = group.node()
         // line
-        d3.select(group.node())
-             .append('path')
-             .attr('stroke', '#666')
-             .attr('d', `M${this.startX} ${this.startY} L${this.endX} ${this.endY}`)
+        // d3.select(group.node())
+        //      .append('path')
+        //      .attr('stroke', '#666')
+        //      .attr('d', `M${this.startX} ${this.startY} L${this.endX} ${this.endY}`)
        d3.select(group.node())
              .append('path')
              .attr('stroke', 'black')
@@ -83,10 +83,10 @@ export default class Arrow extends MouseEvent implements Lifecycle{
              .attr('fill', 'black')
              .attr('d', this.drawArrowPath(this.startX, this.startY, this.endX, this.endY))
      } else {
-         d3.select(this.target)
-           .selectAll('path')
-           .filter(function (d, i) { return i === 0;})
-           .attr('d', `M${this.startX} ${this.startY} L${this.endX} ${this.endY}`)
+        //  d3.select(this.target)
+        //    .selectAll('path')
+        //    .filter(function (d, i) { return i === 0;})
+        //    .attr('d', `M${this.startX} ${this.startY} L${this.endX} ${this.endY}`)
 
          d3.select(this.target)
             .append('path')
@@ -110,7 +110,7 @@ export default class Arrow extends MouseEvent implements Lifecycle{
     var alpha = vectorDegree(x1, y1, x2, y2)
     var beta1 = degree2Radian(alpha + HalfArrowDegree)
     var beta2 = degree2Radian(alpha - HalfArrowDegree)
-    const path = `M${x2} ${y2} L${x2 + Math.cos(beta1) * ArrowSlopEdge} ${y2 + Math.sin(beta1) * ArrowSlopEdge} L${x2 + Math.cos(beta2) * ArrowSlopEdge} ${y2 + Math.sin(beta2) * ArrowSlopEdge}`
+    const path = `M${x2} ${y2} L${x2 + Math.cos(beta1) * ArrowSlopEdge} ${y2 + Math.sin(beta1) * ArrowSlopEdge} L${x2 + Math.cos(beta2) * ArrowSlopEdge} ${y2 + Math.sin(beta2) * ArrowSlopEdge} M${x2} ${y2} L${x1} ${y1}`
     console.log(x1, y1, x2, y2, alpha, beta1, beta2, path)
     return path 
   }

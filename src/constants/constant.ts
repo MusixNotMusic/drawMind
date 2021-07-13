@@ -1,4 +1,4 @@
-import { degree2Radian } from './tools'
+import { degree2Radian } from './math'
 export const cellWidth = 10
 export const cellHeight = 10
 export const PanelHeight = 1200

@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 // import Lifecycle from './event/Lifecycle'
-import { PanelHeight, PanelWidth, Margin} from './constants/box'
+import { PanelHeight, PanelWidth, Margin} from './constants/constant'
 import { drawGridBackground } from "./graph/grid";
 import Line from './graph/line'
 import Arrow from './graph/arrow'
@@ -36,9 +36,9 @@ export default class Panel {
  createSvgDom() {
     this.svgDom = document.createElementNS(this.ns, 'svg')
     this.svgDom.setAttribute('xmlns', this.ns)
-    this.svgDom.setAttribute('viewBox', `0 0 ${PanelWidth} ${PanelHeight}`)
-    this.svgDom.setAttribute('width', PanelWidth)
-    this.svgDom.setAttribute('height', PanelHeight)
+    // this.svgDom.setAttribute('viewBox', `0 0 ${PanelWidth} ${PanelHeight}`)
+    this.svgDom.setAttribute('width', '100vw')
+    this.svgDom.setAttribute('height', '100vh')
     return this.svgDom
  }
 
@@ -67,12 +67,10 @@ export default class Panel {
             break;
         case 'multiLine': 
             this.drawInstance = new MultiLine(this.panel)
-            // this.drawInstance.created(this.panel)
             this.drawInstance.registerEvent()
             break;
         case 'multiCurve': 
             this.drawInstance = new MultiCurve(this.panel)
-            // this.drawInstance.created(this.panel)
             this.drawInstance.registerEvent()
             break;
     }
