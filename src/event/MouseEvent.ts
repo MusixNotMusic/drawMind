@@ -1,4 +1,4 @@
-import { getDomOffset } from '../constants/utils'
+import { getDomOffset } from '../dom/utils'
 export default class MouseEvent {
     public svgDom: any;
     public placeholderX: number;

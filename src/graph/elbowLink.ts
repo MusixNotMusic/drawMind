@@ -21,8 +21,6 @@ export default class ElbowLink extends MouseEvent implements Lifecycle{
   created (svgDom: Node | Element) {
   }
 
-  
-
   destroy () {
   }
 
