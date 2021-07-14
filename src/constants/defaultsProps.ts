@@ -33,15 +33,15 @@ export const defaultProps = {
 }
 
 export const defaultPlaceholderProps = {
-    fill: 'steelblue',
+    fill: '#2d2d2d',
     opacity: '0.2',
     stroke: '#2d2d2d',
     strokeWidth: '1.5'
 }
 
 export const defaultDoneProps = {
-    fill: 'steelblue',
-    opacity: '0.2',
+    fill: '#000',
+    opacity: '1',
     stroke: '#000',
     strokeWidth: '2'
 }
