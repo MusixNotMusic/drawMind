@@ -14,6 +14,7 @@ export default class MultiCurve extends MouseEvent implements Lifecycle{
    public svgDom: Node | Element | HTMLElement;
    private pathPoint:Array<any> = [];
    private drawing = false
+   private _points: any = []
    constructor (svgDom: any) {
     super(svgDom)
     this.svgDom = svgDom
@@ -53,11 +54,11 @@ export default class MultiCurve extends MouseEvent implements Lifecycle{
                 .append('path')
                 .attr('stroke', '#666')
                 .attr('fill', 'none')
-                .attr('d', `${loopCurvePath(this.placeholderX, this.placeholderY, this.pathPoint)}`)
+                .attr('d', `${loopCurvePath((this._points = this.pathPoint.slice()).push(this.placeholderX, this.placeholderY))}`)
         } else {
             d3.select(this.target)
               .select('path')
-              .attr('d', `${loopCurvePath(this.placeholderX, this.placeholderY, this.pathPoint)}`)
+              .attr('d', `${loopCurvePath((this._points = this.pathPoint.slice()).push(this.placeholderX, this.placeholderY))}`)
         }
       }
     }
@@ -76,11 +77,11 @@ export default class MultiCurve extends MouseEvent implements Lifecycle{
               .append('path')
               .attr('stroke', '#666')
               .attr('fill', 'none')
-              .attr('d', `${loopCurvePath(this.endX, this.endY, this.pathPoint)}`)
+              .attr('d', `${loopCurvePath((this._points = this.pathPoint.slice()).push(this.endX, this.endY))}`)
       } else {
           d3.select(this.target)
             .select('path')
-            .attr('d', `${loopCurvePath(this.endX, this.endY, this.pathPoint)}`)
+            .attr('d', `${loopCurvePath((this._points = this.pathPoint.slice()).push(this.endX, this.endY))}`)
             .attr('stroke-width', '2')
       }
 
@@ -92,7 +93,7 @@ export default class MultiCurve extends MouseEvent implements Lifecycle{
           .select('path')
           .attr('fill', '#CFE2F3')          
           .attr('stroke', '#000')
-          .attr('d', `${loopCurvePath(this.endX, this.endY, this.pathPoint)}`)
+          .attr('d', `${loopCurvePath((this._points = this.pathPoint.slice()).push(this.endX, this.endY))}`)
           .attr('stroke-width', '2')
         
         this.pathPoint = []

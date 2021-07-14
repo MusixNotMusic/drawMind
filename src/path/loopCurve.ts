@@ -1,8 +1,7 @@
 import { vectorRadian, vectorMod } from '../constants/math'
-export function loopCurvePath(x: number, y: number, pathPoint: any) {
+export function loopCurvePath(pathPoint: any) {
     let path = 'M'
-    let newPoints = pathPoint.slice()
-    newPoints.push([x, y])
+    let newPoints = pathPoint
     path += newPoints[0].join(' ') + ' '
     if (newPoints.length > 2) {
       let tail = newPoints.length - 1
