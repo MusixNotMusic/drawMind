@@ -39,16 +39,82 @@ export const defaultPlaceholderProps = {
     strokeWidth: '1.5'
 }
 
-export const defaultDoneProps = {
+
+export const defaultGhostProps = {
+    fill: 'steelblue',
+    opacity: '0.2',
+    stroke: '#000',
+    strokeWidth: '2'
+}
+
+export const ghostLineProps = {
+    opacity: '0.8',
+    stroke: '#000',
+    strokeWidth: '2'
+}
+
+export const lineProps = {
+    stroke: '#000',
+    opacity: '1',
+    strokeWidth: '2'
+}
+
+export const ghostArrowProps = {
+    fill: '#6f6f6f',
+    stroke: '#6f6f6f',
+    strokeWidth: '1'
+}
+
+export const arrowProps = {
     fill: '#000',
+    stroke: '#000',
+    strokeWidth: '2'
+}
+
+export const ghostElbowProps = {
+    opacity: '0.8',
+    stroke: '#000',
+    strokeWidth: '1.5'
+}
+
+export const elbowProps = {
     opacity: '1',
     stroke: '#000',
     strokeWidth: '2'
 }
 
-export const defaultGhostProps = {
-    fill: 'steelblue',
-    opacity: '0.2',
+export const ghostCurveProps = {
+    opacity: '0.8',
+    stroke: '#000',
+    strokeWidth: '1.5'
+}
+
+export const curveProps = {
+    opacity: '1',
+    stroke: '#000',
+    strokeWidth: '2'
+}
+
+export const ghostLoopLineProps = {
+    opacity: '0.8',
+    stroke: '#000',
+    strokeWidth: '2'
+}
+
+export const loopLineProps = {
+    fill: '#3d3d3e',
+    stroke: '#000',
+    strokeWidth: '2'
+}
+
+export const ghostLoopCurveProps = {
+    opacity: '0.8',
+    stroke: '#000',
+    strokeWidth: '2'
+}
+
+export const loopCurveProps = {
+    fill: '#3d3d3e',
     stroke: '#000',
     strokeWidth: '2'
 }

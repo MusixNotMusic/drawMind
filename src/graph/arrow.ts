@@ -1,6 +1,7 @@
 import Lifecycle from '../event/Lifecycle'
 import MouseEvent from '../event/MouseEvent'
 import { Plane } from '../entity/plane'
+import { ghostArrowProps, arrowProps } from '../constants/defaultsProps'
 
 export default class Arrow extends MouseEvent implements Lifecycle{
    private mouseDown = false;
@@ -17,7 +18,7 @@ export default class Arrow extends MouseEvent implements Lifecycle{
    constructor (svgDom: any) {
      super(svgDom)
      this.svgDom = svgDom
-     this.plane = new Plane({ cmd: 'arrow' })
+    //  this.plane = new Plane({ cmd: 'arrow' })
    }
 
   created (svgDom: Node | Element) {
@@ -34,6 +35,7 @@ export default class Arrow extends MouseEvent implements Lifecycle{
     this.startX = this.getOffsetX(e)
     this.startY = this.getOffsetY(e)
     this.points = [[this.startX, this.startY]]
+    this.plane = new Plane({ cmd: 'arrow' })
   }
 
   moveHandler (e: any) {
@@ -46,9 +48,9 @@ export default class Arrow extends MouseEvent implements Lifecycle{
         _points = this.points.slice()
         _points.push([this.placeholderX, this.placeholderY])
         if (!this.target) {
-           this.target = this.plane.createPlaceholderDom(_points)
+           this.target = this.plane.createDom(_points, ghostArrowProps)
         } else {
-          this.target = this.plane.updatePath(_points )
+          this.target = this.plane.updateDom(_points, ghostArrowProps)
         }
         this.svgDom.append(this.target)
       }
@@ -63,13 +65,14 @@ export default class Arrow extends MouseEvent implements Lifecycle{
       this.endY = this.getOffsetY(e)
       if (this.startX !== this.endX || this.startY !== this.endY) {
         this.points.push([this.endX, this.endY])
-        this.svgDom.append(this.plane.createDoneDom(this.points))
+        this.svgDom.append(this.plane.updateDom(this.points, arrowProps))
       }
       this.placeholderX = 0
       this.placeholderY = 0
       this.endX = 0
       this.endY = 0
       this.target = null
+      this.plane = null
     }
   }
 }

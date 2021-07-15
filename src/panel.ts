@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 // import Lifecycle from './event/Lifecycle'
-import { PanelHeight, PanelWidth, Margin} from './constants/constant'
+import { PanelHeight, PanelWidth } from './constants/constant'
 import { drawGridBackground } from "./graph/grid";
 import Line from './graph/line'
 import Arrow from './graph/arrow'
@@ -11,42 +11,50 @@ import MultiCurve from './graph/multiCurve'
 
 export default class Panel {
  private panel: any = null;
- private mx = PanelWidth / 2 * Margin
- private my = PanelHeight / 2 * Margin
  private drawInstance: any = null;
  public ns: string = 'http://www.w3.org/2000/svg'
  private svgDom: any;
+ private container: any;
+ private background: any;
  create(opt: any) {
-    this.panel = this.createSvgDom()
-    d3.select(document.body)
+    this.container = d3.select(document.body)
         .append('div')
         .attr('id', 'panel')
-        .style('display', 'flex')
-        .style('justify-content', 'center')
+        .attr('class', 'panel-container')
         .node()
-        .append(this.panel)
-    console.log(this.panel)
-    const path = `M${this.mx},${this.my}${drawGridBackground(PanelWidth - this.mx * 2, PanelHeight - this.my * 2, false)}`;
-    d3.select(this.panel)
-        .append('path')
-        .attr('stroke', '#ccc')
-        .attr('d', path)
+
+    let clientWidth = this.container.clientWidth
+    let clientHeight = this.container.clientHeight
+    this.panel = this.createSvgDom(clientWidth, clientHeight)
+    this.container.append(this.panel)
+    
+    const path = `M${0},${0}${drawGridBackground(clientWidth, clientHeight, false)}`;
+    this.background = d3.select(this.panel).append('path').attr('stroke', '#cecece').attr('stroke-width', '0.8').attr('d', path).node()
+    window.addEventListener('resize', this.resize.bind(this), false)
  }
 
- createSvgDom() {
+ createSvgDom(viewBoxWidth: number, viewBoxHeight: number) {
     this.svgDom = document.createElementNS(this.ns, 'svg')
     this.svgDom.setAttribute('xmlns', this.ns)
-    // this.svgDom.setAttribute('viewBox', `0 0 ${PanelWidth} ${PanelHeight}`)
-    this.svgDom.setAttribute('width', '100vw')
-    this.svgDom.setAttribute('height', '100vh')
+    this.svgDom.setAttribute('viewBox', `0 0 ${viewBoxWidth} ${viewBoxHeight}`)
+    this.svgDom.setAttribute('width', '100%')
+    this.svgDom.setAttribute('height', '100%')
     return this.svgDom
+ }
+
+ resize () {
+    console.log('123123')
+    let clientWidth = this.container.clientWidth
+    let clientHeight = this.container.clientHeight
+    this.svgDom.setAttribute('viewBox', `0 0 ${clientWidth} ${clientHeight}`)
+    const path = `M${0},${0}${drawGridBackground(clientWidth, clientHeight, false)}`;
+    this.background.setAttribute('d', path)
  }
 
  switchMode (mode: string) {
      console.log('switchMode', this.panel)
     if (this.drawInstance) {
         this.drawInstance.destroyEvent()
-        // this.drawInstance.target.remove()
     }
     switch(mode){
         case 'line': 
@@ -77,6 +85,6 @@ export default class Panel {
  }
 
  destroy () {
-
+    window.removeEventListener('resize', null)
  }
 }

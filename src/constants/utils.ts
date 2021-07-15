@@ -18,7 +18,10 @@ export function camel2Line(name:  string) {
 /**
  * 
  */
-export function obj2Str(obj: Object) {
-    return Object.entries(obj).reduce((cur: string, next: any) => { return cur + `${next.join('=')} `}, ' ')
+export function obj2PropsStr(obj: Object) {
+    return Object.entries(obj).reduce((cur: string, next: any) => { 
+        next[0] = camel2Line(next[0])
+        return cur + `${next.join('=')} `}, 
+    ' ')
 }
 

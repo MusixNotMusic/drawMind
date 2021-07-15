@@ -17,7 +17,6 @@
 import * as _ from 'lodash'
 import { 
     defaultPlaceholderProps,
-    defaultDoneProps,
     defaultGhostProps
 } from '../constants/defaultsProps'
 import { lineTo } from '../path/line'
@@ -27,18 +26,16 @@ import { drawCurvePath } from '../path/curve'
 import { loopLinePath  } from '../path/loopLine'
 import { loopCurvePath } from '../path/loopCurve'
 import { parserSvgString } from '../dom/utils'
-import { obj2Str } from '../constants/utils'
+// import { obj2PropsStr } from '../constants/utils'
 
 export class Plane {
-    private placeholderProps: any;
-    private doneProps: any;
+    private props: any;
     private ghostProps: any;
     private points: any = [];
     private target: any;
     private cmd: string;
     constructor(options: any) {
-        this.placeholderProps = _.defaults(options.placeholderProps || {}, defaultPlaceholderProps)
-        this.doneProps = _.defaults(options.doneProps || {}, defaultDoneProps)
+        this.props = _.defaults(options.doneProps || {}, defaultPlaceholderProps)
         this.ghostProps = _.defaults(options.ghostProps || {}, defaultGhostProps)
         this.points = options.points || []
         this.target = options.target || null
@@ -72,19 +69,55 @@ export class Plane {
         return d
     }
 
-    createPlaceholderDom (points: []) {
-        this.target = parserSvgString(`<path d="${this.definePathByCmd(points)}" ${obj2Str(this.placeholderProps)}></path>`)
+    createDom (points: any, props: string[]) {
+        this.target = parserSvgString(`<path d="${this.definePathByCmd(points)}"}></path>`)
+        this.updateProps(props)
+        this.target.addEventListener('click', this.elementClick)
         return this.target
     }
 
-    createDoneDom (points: []) {
-        this.target = parserSvgString(`<path d="${this.definePathByCmd(points)}" ${obj2Str(this.doneProps)}></path>`)
+    updateDom (points: any, props: string[]) {
+        this.updatePath(points)
+        this.updateProps(props)
         return this.target
     }
 
     updatePath (points: []) {
-        this.points = points
-        this.target.querySelector('path').setAttribute('d', this.definePathByCmd())
+        if (this.target) {
+            this.points = points
+            this.target.querySelector('path').setAttribute('d', this.definePathByCmd())
+        }
         return this.target
+    }
+
+    updateProps (props: string[], exclude = ['d']) {
+        if (this.target) {
+            this.props = props
+            let $path = this.target.querySelector('path')
+            Object.entries(this.props).forEach((props: any) => {
+                if (!exclude.includes(props[0])) {
+                  $path.setAttribute(props[0], props[1])
+                }
+            })
+        }
+        return this.target
+    }
+
+    removeProps (exclude = ['d']) {
+        if (this.target) {
+          let $path = this.target.querySelector('path')
+          Object.values($path.attributes).forEach((propName: string) => {
+              if (!exclude.includes(propName)) {
+                $path.setAttribute(propName, '')
+              }
+          })
+        }
+        return this.target
+    }
+
+    elementClick (event: any) {
+        event.preventDefault()
+        let box = event.target.getBBox()
+        console.log('box ==>', box)
     }
 }

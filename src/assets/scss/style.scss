@@ -1,3 +1,12 @@
+@import "reset.scss";
+
+.panel-container {
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+}
+
 .control-box {
     position: fixed;
     width: 300px;
