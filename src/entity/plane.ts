@@ -34,12 +34,14 @@ export class Plane {
     private points: any = [];
     private target: any;
     private cmd: string;
+    private d: string;
     constructor(options: any) {
         this.props = _.defaults(options.doneProps || {}, defaultPlaceholderProps)
         this.ghostProps = _.defaults(options.ghostProps || {}, defaultGhostProps)
         this.points = options.points || []
         this.target = options.target || null
         this.cmd = options.cmd
+        this.d = ''
     }
 
     definePathByCmd (points?: any, cmd?: string) {
@@ -66,6 +68,7 @@ export class Plane {
                 d = loopCurvePath(_points)
                 break;
         }
+        this.d = d
         return d
     }
 
