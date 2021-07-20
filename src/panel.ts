@@ -52,7 +52,7 @@ export default class Panel {
  }
 
  switchMode (mode: string) {
-     console.log('switchMode', this.panel)
+     console.log('switchMode', this.drawInstance)
     if (this.drawInstance) {
         this.drawInstance.destroyEvent()
     }

@@ -1,6 +1,7 @@
-import * as d3 from 'd3'
 import Lifecycle from '../event/Lifecycle'
 import MouseEvent from '../event/MouseEvent'
+import { Plane } from '../entity/plane'
+import { ghostElbowProps, elbowProps } from '../constants/defaultsProps'
 
 export default class ElbowLink extends MouseEvent implements Lifecycle{
    private mouseDown = false;
@@ -11,7 +12,9 @@ export default class ElbowLink extends MouseEvent implements Lifecycle{
    private endX = 0;
    private endY = 0;
    private target: any = null;
-   public svgDom: Node | Element | HTMLElement;
+   public svgDom: any;
+   private plane: any = null;
+   private points: any = [];
 
   constructor (svgDom: any) {
     super(svgDom)
@@ -30,29 +33,27 @@ export default class ElbowLink extends MouseEvent implements Lifecycle{
     this.mouseDown = true
     this.startX = this.getOffsetX(e)
     this.startY = this.getOffsetY(e)
+    this.points = [[this.startX, this.startY]]
+    this.plane = new Plane({ cmd: 'elbow' })
   }
 
   moveHandler (e: any) {
     e.preventDefault()
     if(this.mouseDown) {
       // console.log(e.type, e)
+      let _points = []
       this.placeholderX = this.getOffsetX(e)
       this.placeholderY = this.getOffsetY(e)
       if (this.startX !== this.placeholderX || this.startY !== this.placeholderY) {
-        if (!this.target) {
-           let group = d3.select(this.svgDom as Element).append('g')
-           this.target = group.node()
-           // line
-           d3.select(group.node())
-                .append('path')
-                .attr('stroke', '#666')
-                .attr('stroke-width', '1.5')
-                .attr('fill', 'transparent')
-                .attr('d', this.drawElbowPath(this.startX, this.startY, this.placeholderX, this.placeholderY))
-        } else {
-            d3.select(this.target)
-              .select('path')
-              .attr('d', this.drawElbowPath(this.startX, this.startY, this.placeholderX, this.placeholderY))
+        if (this.startX !== this.placeholderX || this.startY !== this.placeholderY) {
+          _points = this.points.slice()
+          _points.push([this.placeholderX, this.placeholderY])
+          if (!this.target) {
+            this.target = this.plane.createDom(_points, ghostElbowProps)
+          } else {
+            this.target = this.plane.updateDom(_points, ghostElbowProps)
+          }
+          this.svgDom.append(this.target)
         }
       }
     }
@@ -66,47 +67,15 @@ export default class ElbowLink extends MouseEvent implements Lifecycle{
       this.endX = this.getOffsetX(e)
       this.endY = this.getOffsetY(e)
       if (this.startX !== this.endX || this.startY !== this.endY) {
-      if (!this.target) {
-        let group = d3.select(this.svgDom as Element).append('g')
-        this.target = group.node()
-        // line
-        d3.select(group.node())
-             .append('path')
-             .attr('stroke', '#666')
-             .attr('stroke-width', '1.5')
-             .attr('fill', 'transparent')
-             .attr('d', this.drawElbowPath(this.startX, this.startY, this.placeholderX, this.placeholderY))
-     } else {
-         d3.select(this.target)
-           .select('path')
-           .attr('stroke', '#000')
-           .attr('stroke-width', '2')
-           .attr('d', this.drawElbowPath(this.startX, this.startY, this.placeholderX, this.placeholderY))
-     }
-    }
+        this.points.push([this.endX, this.endY])
+        this.svgDom.append(this.plane.updateDom(this.points, elbowProps))
+      }
       this.placeholderX = 0
       this.placeholderY = 0
       this.endX = 0
       this.endY = 0
       this.target = null
+      this.plane = null
     }
-  }
-
-  drawElbowPath (x1: number, y1: number, x2: number, y2: number) {
-    let path = ''
-    if (x1 === x2 || y1 === y2) {
-        path = `M${x1} ${y1} L${x2} ${y2}`
-    } else {
-        let dx = Math.abs(x2 - x1)
-        let dy = Math.abs(y2 - y1)
-        if (dx - dy >= 0) {
-            let half_x = (x2 + x1) / 2
-            path = `M${x1} ${y1} H${half_x} V${y2} H${x2}`
-        } else {
-            let half_y = (y2 + y1) / 2
-            path = `M${x1} ${y1} V${half_y} H${x2} V${y2}`
-        }
-    }
-    return path 
   }
 }

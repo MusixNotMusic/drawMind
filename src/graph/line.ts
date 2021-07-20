@@ -1,6 +1,9 @@
 import * as d3 from 'd3'
 import Lifecycle from '../event/Lifecycle'
 import MouseEvent from '../event/MouseEvent'
+import { Plane } from '../entity/plane'
+import { ghostLineProps, lineProps } from '../constants/defaultsProps'
+
 export default class Line extends MouseEvent implements Lifecycle{
    private mouseDown = false;
    private startX = 0;
@@ -10,7 +13,9 @@ export default class Line extends MouseEvent implements Lifecycle{
    private endX = 0;
    private endY = 0;
    private target: any = null;
-   public svgDom: Node | Element | HTMLElement;
+   public svgDom: any;
+   private plane: any = null;
+   private points: any = [];
 
    constructor (svgDom: any) {
     super(svgDom)
@@ -30,24 +35,25 @@ export default class Line extends MouseEvent implements Lifecycle{
     this.mouseDown = true
     this.startX = this.getOffsetX(e)
     this.startY = this.getOffsetY(e)
+    this.points = [[this.startX, this.startY]]
+    this.plane = new Plane({ cmd: 'line' })
   }
 
   moveHandler (e: any) {
     e.preventDefault()
     if(this.mouseDown) {
-      // console.log(e.type, e)
+      let _points = []
       this.placeholderX = this.getOffsetX(e)
       this.placeholderY = this.getOffsetY(e)
       if (this.startX !== this.placeholderX || this.startY !== this.placeholderY) {
+        _points = this.points.slice()
+        _points.push([this.placeholderX, this.placeholderY])
         if (!this.target) {
-           let _target =  d3.select(this.svgDom as Element)
-                .append('path')
-                .attr('stroke', '#666')
-                .attr('d', `M${this.startX} ${this.startY} L${this.placeholderX} ${this.placeholderY}`)
-            this.target = _target.node()
+          this.target = this.plane.createDom(_points, ghostLineProps)
         } else {
-            d3.select(this.target).attr('d', `M${this.startX} ${this.startY} L${this.placeholderX} ${this.placeholderY}`)
+          this.target = this.plane.updateDom(_points, ghostLineProps)
         }
+        this.svgDom.append(this.target)
       }
     }
   }
@@ -59,23 +65,16 @@ export default class Line extends MouseEvent implements Lifecycle{
       this.mouseDown = false
       this.endX = this.getOffsetX(e)
       this.endY = this.getOffsetY(e)
-      if (!this.target) {
-        // this.target = (this.svgDom as Node).appendChild(`<path stroke=#666  d="M${this.startX} ${this.startY} L${this.endX} ${this.endY}">`)
-        let _target = d3.select(this.svgDom as Element)
-                .append('path')
-                .attr('stroke', '#666')
-                .attr('d', `M${this.startX} ${this.startY} L${this.endX} ${this.endY}`)
-        this.target = _target.node()
-      } else {
-        d3.select(this.target)
-          .attr('d', `M${this.startX} ${this.startY} L${this.endX} ${this.endY}`)
-          .attr('stroke-width', '1.5')
+      if (this.startX !== this.endX || this.startY !== this.endY) {
+        this.points.push([this.endX, this.endY])
+        this.svgDom.append(this.plane.updateDom(this.points, lineProps))
       }
       this.placeholderX = 0
       this.placeholderY = 0
       this.endX = 0
       this.endY = 0
       this.target = null
+      this.plane = null
     }
   }
 }

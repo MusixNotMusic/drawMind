@@ -27,6 +27,7 @@ import { loopLinePath  } from '../path/loopLine'
 import { loopCurvePath } from '../path/loopCurve'
 import { parserSvgString } from '../dom/utils'
 // import { obj2PropsStr } from '../constants/utils'
+import SelectedRect from './selected'
 
 export class Plane {
     private props: any;
@@ -49,7 +50,7 @@ export class Plane {
         let _points = points || this.points
         let d = ''
         switch(_cmd) {
-            case 'lineTo':
+            case 'line':
                 d = lineTo(_points[0][0], _points[0][1], _points[1][0], _points[1][1])
                 break;
             case 'arrow':
@@ -73,9 +74,9 @@ export class Plane {
     }
 
     createDom (points: any, props: string[]) {
-        this.target = parserSvgString(`<path d="${this.definePathByCmd(points)}"}></path>`)
+        this.target = parserSvgString(`<path class="ghost"></path><path class="plane" d="${this.definePathByCmd(points)}"}></path>`)
         this.updateProps(props)
-        this.target.addEventListener('click', this.elementClick)
+        this.target.addEventListener('click', this.elementClick.bind(this))
         return this.target
     }
 
@@ -88,15 +89,15 @@ export class Plane {
     updatePath (points: []) {
         if (this.target) {
             this.points = points
-            this.target.querySelector('path').setAttribute('d', this.definePathByCmd())
+            this.target.querySelector('.plane').setAttribute('d', this.definePathByCmd())
         }
         return this.target
     }
 
-    updateProps (props: string[], exclude = ['d']) {
+    updateProps (props: string[], exclude = ['d', 'class', 'id']) {
         if (this.target) {
             this.props = props
-            let $path = this.target.querySelector('path')
+            let $path = this.target.querySelector('.plane')
             Object.entries(this.props).forEach((props: any) => {
                 if (!exclude.includes(props[0])) {
                   $path.setAttribute(props[0], props[1])
@@ -120,7 +121,8 @@ export class Plane {
 
     elementClick (event: any) {
         event.preventDefault()
-        let box = event.target.getBBox()
-        console.log('box ==>', box)
+        // let box = event.target.getBBox()
+        let rect = new SelectedRect({ target: this.target, d: this.d })
+        let dom = rect.drawOutline()
     }
 }

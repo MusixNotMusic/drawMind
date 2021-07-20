@@ -48,8 +48,7 @@ export const defaultGhostProps = {
 }
 
 export const ghostLineProps = {
-    opacity: '0.8',
-    stroke: '#000',
+    stroke: '#6f6f6f',
     strokeWidth: '2'
 }
 
@@ -72,14 +71,16 @@ export const arrowProps = {
 }
 
 export const ghostElbowProps = {
-    opacity: '0.8',
-    stroke: '#000',
+    opacity: '1',
+    stroke: '#6f6f6f',
+    fill: 'transparent',
     strokeWidth: '1.5'
 }
 
 export const elbowProps = {
     opacity: '1',
     stroke: '#000',
+    fill: 'transparent',
     strokeWidth: '2'
 }
 

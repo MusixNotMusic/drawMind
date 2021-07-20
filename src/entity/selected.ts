@@ -1,4 +1,5 @@
 import { parserSvgString } from '../dom/utils'
+import * as d3 from 'd3'
 export default class SelectedRect {
     private topLeft: number[];
     private topCenter: number[];
@@ -18,8 +19,9 @@ export default class SelectedRect {
     //     [2, 0], [2, 1], [2, 2],
     // ]
     constructor(options: any) {
-        this.target = options.target
-        this.d = options.d
+        this.target = options.target || {}
+        this.d = options.d || {}
+        this.calcBoxPoints()
     }
 
     /**
@@ -39,27 +41,34 @@ export default class SelectedRect {
        this.topCenter = [x2, y1]
        this.topRight  = [x3, y1]
 
-       this.midLeft   = [x2, y1]
+       this.midLeft   = [x1, y2]
        this.center    = [x2, y2]
-       this.midRight  = [x2, y3]
+       this.midRight  = [x3, y2]
 
-       this.bottomLeft   = [x3, y1]
-       this.bottomCenter = [x3, y2]
+       this.bottomLeft   = [x1, y3]
+       this.bottomCenter = [x2, y3]
        this.bottomRight  = [x3, y3]
     }
 
-    drawOutline (rect: any) {
+    drawOutline () {
+        let rect = this.target.getBBox()
+        let width = 5
+        let height = 5
+        let color = '#4285f4'
         let path = `
-                <path d="M${rect.x} ${rect.y} h${rect.width} v${rect.height} h${-rect.width} v${-rect.height}z" stroke-width=1 stroke="#4285f4"></path>
-                <rect x="${this.topLeft[0]}" y="${this.topLeft[1]}" width="10" height="10" fill="#4285f4"></rect>
-                <rect x="${this.topCenter[0]}" y="${this.topCenter[1]}" width="10" height="10" fill="#4285f4"></rect>
-                <rect x="${this.topRight[0]}" y="${this.topRight[1]}" width="10" height="10" fill="#4285f4"></rect>
-                <rect x="${this.midLeft[0]}" y="${this.midLeft[1]}" width="10" height="10" fill="#4285f4"></rect>
-                <rect x="${this.midRight[0]}" y="${this.midRight[1]}" width="10" height="10" fill="#4285f4"></rect>
-                <rect x="${this.bottomLeft[0]}" y="${this.bottomLeft[1]}" width="10" height="10" fill="#4285f4"></rect>
-                <rect x="${this.bottomCenter[0]}" y="${this.bottomCenter[1]}" width="10" height="10" fill="#4285f4"></rect>
-                <rect x="${this.bottomRight[0]}" y="${this.bottomRight[1]}" width="10" height="10" fill="#4285f4"></rect>
+                <path d="M${rect.x} ${rect.y} h${rect.width} v${rect.height} h${-rect.width} v${-rect.height}z" stroke-width=1 stroke="${color}" fill="transparent"></path>
+                <rect x="${this.topLeft[0] - width / 2}" y="${this.topLeft[1] - height / 2}" width="${width}" height="${height}" fill="${color}"></rect>
+                <rect x="${this.topCenter[0] - width / 2}" y="${this.topCenter[1] - height / 2}" width="${width}" height="${height}" fill="${color}"></rect>
+                <rect x="${this.topRight[0] - width / 2}" y="${this.topRight[1] - height / 2}" width="${width}" height="${height}" fill="${color}""></rect>
+                <rect x="${this.midLeft[0] - width / 2}" y="${this.midLeft[1] - height / 2}" width="${width}" height="${height}" fill="${color}"></rect>
+                <rect x="${this.midRight[0] - width / 2}" y="${this.midRight[1] - height / 2}" width="${width}" height="${height}" fill="${color}"></rect>
+                <rect x="${this.bottomLeft[0] - width / 2}" y="${this.bottomLeft[1] - height / 2}" width="${width}" height="${height}" fill="${color}"></rect>
+                <rect x="${this.bottomCenter[0] - width / 2}" y="${this.bottomCenter[1] - height / 2}" width="${width}" height="${height}" fill="${color}"></rect>
+                <rect x="${this.bottomRight[0] - width / 2}" y="${this.bottomRight[1] - height / 2}" width="${width}" height="${height}" fill="${color}"></rect>
             `
-        return parserSvgString(path)
+        this.target.querySelector('.ghost').setAttribute('d', this.d)
+        this.target.querySelector('.ghost').setAttribute('stroke', color)
+        this.target.querySelector('.ghost').setAttribute('stroke-width', 2.5)
+        document.body.querySelector('svg').append(parserSvgString(path))
     }
 }
