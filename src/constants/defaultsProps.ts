@@ -87,23 +87,27 @@ export const elbowProps = {
 export const ghostCurveProps = {
     opacity: '0.8',
     stroke: '#000',
+    fill: 'transparent',
     strokeWidth: '1.5'
 }
 
 export const curveProps = {
     opacity: '1',
     stroke: '#000',
+    fill: 'transparent',
     strokeWidth: '2'
 }
 
 export const ghostLoopLineProps = {
     opacity: '0.8',
     stroke: '#000',
-    strokeWidth: '2'
+    fill: 'transparent',
+    strokeWidth: '1'
 }
 
 export const loopLineProps = {
-    fill: '#3d3d3e',
+    opacity: '1',
+    fill: '#CFE2F3',
     stroke: '#000',
     strokeWidth: '2'
 }
@@ -111,11 +115,13 @@ export const loopLineProps = {
 export const ghostLoopCurveProps = {
     opacity: '0.8',
     stroke: '#000',
-    strokeWidth: '2'
+    fill: 'transparent',
+    strokeWidth: '1'
 }
 
 export const loopCurveProps = {
-    fill: '#3d3d3e',
+    opacity: '1',
+    fill: '#CFE2F3',
     stroke: '#000',
     strokeWidth: '2'
 }

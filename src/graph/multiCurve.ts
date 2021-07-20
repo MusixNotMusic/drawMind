@@ -1,8 +1,9 @@
-import * as d3 from 'd3'
-import Lifecycle from '../event/Lifecycle'
 import MouseEvent from '../event/MouseEvent'
-import { loopCurvePath, nearByRadius } from '../path/loopCurve'
-export default class MultiCurve extends MouseEvent implements Lifecycle{
+import { nearByRadius } from '../path/loopCurve'
+import { ghostLoopCurveProps, loopCurveProps } from '../constants/defaultsProps'
+import { Plane } from '../entity/plane'
+
+export default class MultiCurve extends MouseEvent{
    private mouseDown = false;
    private startX = 0;
    private startY = 0;
@@ -11,33 +12,26 @@ export default class MultiCurve extends MouseEvent implements Lifecycle{
    private endX = 0;
    private endY = 0;
    private target: any = null;
-   public svgDom: Node | Element | HTMLElement;
-   private pathPoint:Array<any> = [];
    private drawing = false
-   private _points: any = []
+   public svgDom: any;
+   private plane: any = null;
+   private points: any = [];
    constructor (svgDom: any) {
     super(svgDom)
     this.svgDom = svgDom
    }
 
-   created (svgDom: Node | Element) {
-   }
-
-
-  destroy () {
-  }
 
   startHandler (e: any): void {
-    console.log('startHandler ==>')
     e.preventDefault()
     this.mouseDown = true
     this.startX = this.getOffsetX(e)
     this.startY = this.getOffsetY(e)
     if (!this.drawing) {
-      this.pathPoint.push([this.startX, this.startY])
+      this.points.push([this.startX, this.startY])
       this.drawing = true
+      this.plane = new Plane({ cmd: 'loopCurve' })
     }
-    this.mouseDown = true
   }
 
   moveHandler (e: any) {
@@ -46,20 +40,14 @@ export default class MultiCurve extends MouseEvent implements Lifecycle{
       this.placeholderX = this.getOffsetX(e)
       this.placeholderY = this.getOffsetY(e)
       if (this.startX !== this.placeholderX || this.startY !== this.placeholderY) {
+        let _points = this.points.slice()
+        _points.push([this.placeholderX, this.placeholderY])
         if (!this.target) {
-           let group = d3.select(this.svgDom as Element).append('g')
-           this.target = group.node()
-           // line
-           d3.select(group.node())
-                .append('path')
-                .attr('stroke', '#666')
-                .attr('fill', 'none')
-                .attr('d', `${loopCurvePath((this._points = this.pathPoint.slice()).push(this.placeholderX, this.placeholderY))}`)
+          this.target = this.plane.createDom(_points, ghostLoopCurveProps)
         } else {
-            d3.select(this.target)
-              .select('path')
-              .attr('d', `${loopCurvePath((this._points = this.pathPoint.slice()).push(this.placeholderX, this.placeholderY))}`)
+          this.target = this.plane.updateDom(_points, ghostLoopCurveProps)
         }
+        this.svgDom.append(this.target)
       }
     }
   }
@@ -69,38 +57,17 @@ export default class MultiCurve extends MouseEvent implements Lifecycle{
     if(this.mouseDown) {
       this.endX = this.getOffsetX(e)
       this.endY = this.getOffsetY(e)
-      
-      if (!this.target) {
-          let group = d3.select(this.svgDom as Element).append('g')
-          this.target = group.node()
-          d3.select(group.node())
-              .append('path')
-              .attr('stroke', '#666')
-              .attr('fill', 'none')
-              .attr('d', `${loopCurvePath((this._points = this.pathPoint.slice()).push(this.endX, this.endY))}`)
-      } else {
-          d3.select(this.target)
-            .select('path')
-            .attr('d', `${loopCurvePath((this._points = this.pathPoint.slice()).push(this.endX, this.endY))}`)
-            .attr('stroke-width', '2')
-      }
+      this.points.push([this.endX, this.endY])
 
-      if (nearByRadius(this.pathPoint[0][0], this.pathPoint[0][1], this.endX, this.endY)) {
+      if (nearByRadius(this.points[0][0], this.points[0][1], this.endX, this.endY)) {
         this.mouseDown = false
-        this.endX = this.pathPoint[0][0]        
-        this.endY = this.pathPoint[0][1]
-        d3.select(this.target)
-          .select('path')
-          .attr('fill', '#CFE2F3')          
-          .attr('stroke', '#000')
-          .attr('d', `${loopCurvePath((this._points = this.pathPoint.slice()).push(this.endX, this.endY))}`)
-          .attr('stroke-width', '2')
-        
-        this.pathPoint = []
         this.drawing = false
+        this.plane.updateDom(this.points, loopCurveProps)
         this.target = null
+        this.plane = null
+        this.points = []
       } else {
-        this.pathPoint.push([this.endX, this.endY])
+        this.target = this.plane.updateDom(this.points, ghostLoopCurveProps)
       }
       this.placeholderX = 0
       this.placeholderY = 0

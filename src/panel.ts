@@ -55,33 +55,29 @@ export default class Panel {
      console.log('switchMode', this.drawInstance)
     if (this.drawInstance) {
         this.drawInstance.destroyEvent()
+        this.drawInstance = null
     }
     switch(mode){
         case 'line': 
             this.drawInstance = new Line(this.panel)
-            this.drawInstance.registerEvent()
             break;
         case 'arrow': 
             this.drawInstance = new Arrow(this.panel)
-            this.drawInstance.registerEvent()
             break;
         case 'elbow': 
             this.drawInstance = new ElbowLink(this.panel)
-            this.drawInstance.registerEvent()
             break;
         case 'curve': 
             this.drawInstance = new CurveLink(this.panel)
-            this.drawInstance.registerEvent()
             break;
         case 'multiLine': 
             this.drawInstance = new MultiLine(this.panel)
-            this.drawInstance.registerEvent()
             break;
         case 'multiCurve': 
             this.drawInstance = new MultiCurve(this.panel)
-            this.drawInstance.registerEvent()
             break;
     }
+    this.drawInstance.registerEvent()
  }
 
  destroy () {

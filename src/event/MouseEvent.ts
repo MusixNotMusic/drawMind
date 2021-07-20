@@ -1,4 +1,5 @@
 import { getDomOffset } from '../dom/utils'
+import * as d3 from 'd3'
 export default class MouseEvent {
     public svgDom: any;
     public placeholderX: number;
@@ -8,25 +9,25 @@ export default class MouseEvent {
     }
     registerEvent () {
         if (this.svgDom) {
-          this.svgDom.addEventListener('mousedown', this.startHandler.bind(this), false)  
-          this.svgDom.addEventListener('mousemove', this.moveHandler.bind(this), false)
-          this.svgDom.addEventListener('mouseup', this.endHandler.bind(this), false)
-    
-          this.svgDom.addEventListener('touchstart', this.startHandler.bind(this), false)  
-          this.svgDom.addEventListener('touchmove', this.moveHandler.bind(this), false)
-          this.svgDom.addEventListener('touchend', this.endHandler.bind(this), false)
+          d3.select(this.svgDom).on('mousedown', this.startHandler.bind(this))
+          d3.select(this.svgDom).on('mousemove', this.moveHandler.bind(this))
+          d3.select(this.svgDom).on('mouseup', this.endHandler.bind(this))
+
+          d3.select(this.svgDom).on('touchstart', this.startHandler.bind(this))
+          d3.select(this.svgDom).on('touchmove', this.moveHandler.bind(this))
+          d3.select(this.svgDom).on('touchend', this.endHandler.bind(this))
         }
     }
 
     destroyEvent () {
         if (this.svgDom) {
-            this.svgDom.removeEventListener('mousedown', () => {}, false)  
-            this.svgDom.removeEventListener('mousemove', () => {}, false)
-            this.svgDom.removeEventListener('mouseup', () => {}, false)
-        
-            this.svgDom.removeEventListener('touchstart', () => {}, false)  
-            this.svgDom.removeEventListener('touchmove', () => {}, false)
-            this.svgDom.removeEventListener('touchend', () => {}, false)
+            d3.select(this.svgDom).on('mousedown', null)
+            d3.select(this.svgDom).on('mousemove', null)
+            d3.select(this.svgDom).on('mouseup', null)
+
+            d3.select(this.svgDom).on('touchstart', null)
+            d3.select(this.svgDom).on('touchmove', null)
+            d3.select(this.svgDom).on('touchend', null)
             this.svgDom = null
         }
     }

@@ -1,9 +1,8 @@
-import Lifecycle from '../event/Lifecycle'
 import MouseEvent from '../event/MouseEvent'
 import { Plane } from '../entity/plane'
 import { ghostArrowProps, arrowProps } from '../constants/defaultsProps'
 
-export default class Arrow extends MouseEvent implements Lifecycle{
+export default class Arrow extends MouseEvent{
    private mouseDown = false;
    private startX = 0;
    private startY = 0;
@@ -20,13 +19,6 @@ export default class Arrow extends MouseEvent implements Lifecycle{
      this.svgDom = svgDom
     //  this.plane = new Plane({ cmd: 'arrow' })
    }
-
-  created (svgDom: Node | Element) {
-  }
-   
-
-  destroy () {
-  }
 
   startHandler (e: any): void {
     e.preventDefault()

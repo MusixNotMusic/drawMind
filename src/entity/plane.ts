@@ -26,7 +26,7 @@ import { drawCurvePath } from '../path/curve'
 import { loopLinePath  } from '../path/loopLine'
 import { loopCurvePath } from '../path/loopCurve'
 import { parserSvgString } from '../dom/utils'
-// import { obj2PropsStr } from '../constants/utils'
+import { camel2Line } from '../constants/utils'
 import SelectedRect from './selected'
 
 export class Plane {
@@ -76,7 +76,7 @@ export class Plane {
     createDom (points: any, props: string[]) {
         this.target = parserSvgString(`<path class="ghost"></path><path class="plane" d="${this.definePathByCmd(points)}"}></path>`)
         this.updateProps(props)
-        this.target.addEventListener('click', this.elementClick.bind(this))
+        // this.target.addEventListener('click', this.elementClick.bind(this))
         return this.target
     }
 
@@ -100,7 +100,7 @@ export class Plane {
             let $path = this.target.querySelector('.plane')
             Object.entries(this.props).forEach((props: any) => {
                 if (!exclude.includes(props[0])) {
-                  $path.setAttribute(props[0], props[1])
+                  $path.setAttribute(camel2Line(props[0]), props[1])
                 }
             })
         }
@@ -119,10 +119,10 @@ export class Plane {
         return this.target
     }
 
-    elementClick (event: any) {
-        event.preventDefault()
-        // let box = event.target.getBBox()
-        let rect = new SelectedRect({ target: this.target, d: this.d })
-        let dom = rect.drawOutline()
-    }
+    // elementClick (event: any) {
+    //     event.preventDefault()
+    //     // let box = event.target.getBBox()
+    //     let rect = new SelectedRect({ target: this.target, d: this.d })
+    //     let dom = rect.drawOutline()
+    // }
 }

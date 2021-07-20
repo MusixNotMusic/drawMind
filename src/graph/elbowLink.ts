@@ -45,16 +45,14 @@ export default class ElbowLink extends MouseEvent implements Lifecycle{
       this.placeholderX = this.getOffsetX(e)
       this.placeholderY = this.getOffsetY(e)
       if (this.startX !== this.placeholderX || this.startY !== this.placeholderY) {
-        if (this.startX !== this.placeholderX || this.startY !== this.placeholderY) {
-          _points = this.points.slice()
-          _points.push([this.placeholderX, this.placeholderY])
-          if (!this.target) {
-            this.target = this.plane.createDom(_points, ghostElbowProps)
-          } else {
-            this.target = this.plane.updateDom(_points, ghostElbowProps)
-          }
-          this.svgDom.append(this.target)
+        _points = this.points.slice()
+        _points.push([this.placeholderX, this.placeholderY])
+        if (!this.target) {
+          this.target = this.plane.createDom(_points, ghostElbowProps)
+        } else {
+          this.target = this.plane.updateDom(_points, ghostElbowProps)
         }
+        this.svgDom.append(this.target)
       }
     }
   }
