@@ -5,7 +5,7 @@ import Panel from './panel'
 import '@/assets/scss/style.scss';
 let panel = new Panel()
 
-const mode = ['line', 'arrow', 'elbow', 'curve', 'multiLine', 'multiCurve']
+const mode = ['line', 'arrow', 'elbow', 'curve', 'multiLine', 'multiCurve', 'mouse']
 
 const modeList = mode.map((item, index)=> {
     return <div className="handle-item" key={index} onClick={() => { panel.switchMode(item) }}>{item}</div>

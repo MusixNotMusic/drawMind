@@ -1,6 +1,5 @@
 import * as d3 from 'd3'
 // import Lifecycle from './event/Lifecycle'
-import { PanelHeight, PanelWidth } from './constants/constant'
 import { drawGridBackground } from "./graph/grid";
 import Line from './graph/line'
 import Arrow from './graph/arrow'
@@ -8,7 +7,9 @@ import ElbowLink from './graph/elbowLink'
 import CurveLink from './graph/curveLink'
 import MultiLine from './graph/multiLine'
 import MultiCurve from './graph/multiCurve'
+import MouseDefault from './graph/default'
 
+// 
 export default class Panel {
  private panel: any = null;
  private drawInstance: any = null;
@@ -27,9 +28,8 @@ export default class Panel {
     let clientHeight = this.container.clientHeight
     this.panel = this.createSvgDom(clientWidth, clientHeight)
     this.container.append(this.panel)
-    
-    const path = `M${0},${0}${drawGridBackground(clientWidth, clientHeight, false)}`;
-    this.background = d3.select(this.panel).append('path').attr('stroke', '#cecece').attr('stroke-width', '0.8').attr('d', path).node()
+    // draw background
+    this.drawBackground(clientWidth, clientHeight)
     window.addEventListener('resize', this.resize.bind(this), false)
  }
 
@@ -39,16 +39,31 @@ export default class Panel {
     this.svgDom.setAttribute('viewBox', `0 0 ${viewBoxWidth} ${viewBoxHeight}`)
     this.svgDom.setAttribute('width', '100%')
     this.svgDom.setAttribute('height', '100%')
+    this.svgDom.setAttribute('pointer-events', 'visiblePainted')
     return this.svgDom
  }
 
  resize () {
-    console.log('123123')
     let clientWidth = this.container.clientWidth
     let clientHeight = this.container.clientHeight
     this.svgDom.setAttribute('viewBox', `0 0 ${clientWidth} ${clientHeight}`)
     const path = `M${0},${0}${drawGridBackground(clientWidth, clientHeight, false)}`;
     this.background.setAttribute('d', path)
+ }
+ /**
+  * @note https://developer.mozilla.org/zh-CN/docs/Web/CSS/pointer-events
+  * @param clientWidth 
+  * @param clientHeight 
+  */
+ drawBackground (clientWidth: number, clientHeight: number) {
+    const path = `M${0},${0}${drawGridBackground(clientWidth, clientHeight, false)}`;
+    this.background = d3.select(this.panel)
+        .append('path')
+        .attr('stroke', '#cecece')
+        .attr('stroke-width', '0.8')
+        .attr('pointer-events', 'none')
+        .attr('d', path)
+        .node()
  }
 
  switchMode (mode: string) {
@@ -75,6 +90,9 @@ export default class Panel {
             break;
         case 'multiCurve': 
             this.drawInstance = new MultiCurve(this.panel)
+            break;
+        case 'mouse': 
+            this.drawInstance = new MouseDefault(this.panel)
             break;
     }
     this.drawInstance.registerEvent()

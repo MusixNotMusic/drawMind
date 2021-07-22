@@ -4,7 +4,7 @@ import MouseEvent from '../event/MouseEvent'
 import { Plane } from '../entity/plane'
 import { ghostLineProps, lineProps } from '../constants/defaultsProps'
 
-export default class Line extends MouseEvent implements Lifecycle{
+export default class Line extends MouseEvent implements Lifecycle {
    private mouseDown = false;
    private startX = 0;
    private startY = 0;

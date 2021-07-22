@@ -27,7 +27,6 @@ import { loopLinePath  } from '../path/loopLine'
 import { loopCurvePath } from '../path/loopCurve'
 import { parserSvgString } from '../dom/utils'
 import { camel2Line } from '../constants/utils'
-import SelectedRect from './selected'
 
 export class Plane {
     private props: any;
@@ -74,9 +73,8 @@ export class Plane {
     }
 
     createDom (points: any, props: string[]) {
-        this.target = parserSvgString(`<path class="ghost"></path><path class="plane" d="${this.definePathByCmd(points)}"}></path>`)
+        this.target = parserSvgString(`<path class="ghost"></path><path class="plane" d="${this.definePathByCmd(points)}"></path>`)
         this.updateProps(props)
-        // this.target.addEventListener('click', this.elementClick.bind(this))
         return this.target
     }
 
@@ -118,11 +116,4 @@ export class Plane {
         }
         return this.target
     }
-
-    // elementClick (event: any) {
-    //     event.preventDefault()
-    //     // let box = event.target.getBBox()
-    //     let rect = new SelectedRect({ target: this.target, d: this.d })
-    //     let dom = rect.drawOutline()
-    // }
 }
