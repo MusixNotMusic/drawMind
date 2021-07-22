@@ -1,8 +1,12 @@
 import * as d3 from 'd3'
+import SelectedRect from '../entity/selected'
+
 export default class MouseDefault {
    private svgDom: any;
-   constructor (svgDom: any) {
-    this.svgDom = svgDom
+   private mem: any;
+   constructor (panel: any, mem: any) {
+    this.svgDom = panel.svgDom
+    this.mem = mem
    }
 
    destroyEvent () {
@@ -10,8 +14,13 @@ export default class MouseDefault {
    }
 
    registerEvent () {
-        d3.select(this.svgDom).on('click', function(e) {
-            console.log('click ==>', e.target)
+        d3.select(this.svgDom).on('click', (e) => {
+            if (e.target) {
+                let dom = this.mem.find(e.target)
+                if (dom) {
+                    SelectedRect.drawOutline(e.target, null, 'outline')
+                }
+            }
         })
    }
 }

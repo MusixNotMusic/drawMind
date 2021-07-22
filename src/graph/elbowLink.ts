@@ -15,10 +15,11 @@ export default class ElbowLink extends MouseEvent implements Lifecycle{
    public svgDom: any;
    private plane: any = null;
    private points: any = [];
-
-  constructor (svgDom: any) {
-    super(svgDom)
-    this.svgDom = svgDom
+   private panel: any;
+  constructor (panel: any) {
+    super(panel.svgDom)
+    this.panel = panel
+    this.svgDom = panel.svgDom
   }
 
   created (svgDom: Node | Element) {
@@ -67,6 +68,7 @@ export default class ElbowLink extends MouseEvent implements Lifecycle{
       if (this.startX !== this.endX || this.startY !== this.endY) {
         this.points.push([this.endX, this.endY])
         this.svgDom.append(this.plane.updateDom(this.points, elbowProps))
+        this.panel.$eventemit.emit('draw-finish', {target: this.target, points: this.points, cmd: 'elbow'}, this)
       }
       this.placeholderX = 0
       this.placeholderY = 0

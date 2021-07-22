@@ -1,9 +1,11 @@
 import { getDomOffset } from '../dom/utils'
 import * as d3 from 'd3'
+
 export default class MouseEvent {
     public svgDom: any;
     public placeholderX: number;
     public placeholderY: number;
+    public eventEmit: any;
     constructor(target: any) {
         this.svgDom = target
     }

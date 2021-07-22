@@ -14,12 +14,14 @@ export default class MultiLine extends MouseEvent{
    private target: any = null;
    private drawing = false
    public svgDom: any;
+   public panel: any;
    private plane: any = null;
    private points: any = [];
-   constructor (svgDom: any) {
-    super(svgDom)
-    this.svgDom = svgDom
-   }
+   constructor (panel: any) {
+    super(panel.svgDom)
+    this.panel = panel
+    this.svgDom = panel.svgDom
+  }
 
 
   startHandler (e: any): void {
@@ -63,6 +65,7 @@ export default class MultiLine extends MouseEvent{
         this.mouseDown = false
         this.drawing = false
         this.plane.updateDom(this.points, loopLineProps)
+        this.panel.$eventemit.emit('draw-finish', {target: this.target, points: this.points, cmd: 'loopLine'}, this)
         this.target = null
         this.plane = null
         this.points = []

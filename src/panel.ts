@@ -1,5 +1,6 @@
 import * as d3 from 'd3'
 // import Lifecycle from './event/Lifecycle'
+import { EventEmitter } from 'eventemitter3'
 import { drawGridBackground } from "./graph/grid";
 import Line from './graph/line'
 import Arrow from './graph/arrow'
@@ -8,15 +9,22 @@ import CurveLink from './graph/curveLink'
 import MultiLine from './graph/multiLine'
 import MultiCurve from './graph/multiCurve'
 import MouseDefault from './graph/default'
+import Memory from './store/mem'
 
 // 
 export default class Panel {
- private panel: any = null;
  private drawInstance: any = null;
  public ns: string = 'http://www.w3.org/2000/svg'
  private svgDom: any;
  private container: any;
  private background: any;
+ private memory: any;
+ private $eventemit: any;
+ constructor() {
+    this.$eventemit = new EventEmitter();
+    this.memory = new Memory(this)
+ }
+
  create(opt: any) {
     this.container = d3.select(document.body)
         .append('div')
@@ -26,8 +34,8 @@ export default class Panel {
 
     let clientWidth = this.container.clientWidth
     let clientHeight = this.container.clientHeight
-    this.panel = this.createSvgDom(clientWidth, clientHeight)
-    this.container.append(this.panel)
+    this.createSvgDom(clientWidth, clientHeight)
+    this.container.append(this.svgDom)
     // draw background
     this.drawBackground(clientWidth, clientHeight)
     window.addEventListener('resize', this.resize.bind(this), false)
@@ -57,7 +65,7 @@ export default class Panel {
   */
  drawBackground (clientWidth: number, clientHeight: number) {
     const path = `M${0},${0}${drawGridBackground(clientWidth, clientHeight, false)}`;
-    this.background = d3.select(this.panel)
+    this.background = d3.select(this.svgDom)
         .append('path')
         .attr('stroke', '#cecece')
         .attr('stroke-width', '0.8')
@@ -74,25 +82,25 @@ export default class Panel {
     }
     switch(mode){
         case 'line': 
-            this.drawInstance = new Line(this.panel)
+            this.drawInstance = new Line(this)
             break;
         case 'arrow': 
-            this.drawInstance = new Arrow(this.panel)
+            this.drawInstance = new Arrow(this)
             break;
         case 'elbow': 
-            this.drawInstance = new ElbowLink(this.panel)
+            this.drawInstance = new ElbowLink(this)
             break;
         case 'curve': 
-            this.drawInstance = new CurveLink(this.panel)
+            this.drawInstance = new CurveLink(this)
             break;
         case 'multiLine': 
-            this.drawInstance = new MultiLine(this.panel)
+            this.drawInstance = new MultiLine(this)
             break;
         case 'multiCurve': 
-            this.drawInstance = new MultiCurve(this.panel)
+            this.drawInstance = new MultiCurve(this)
             break;
         case 'mouse': 
-            this.drawInstance = new MouseDefault(this.panel)
+            this.drawInstance = new MouseDefault(this, this.memory)
             break;
     }
     this.drawInstance.registerEvent()

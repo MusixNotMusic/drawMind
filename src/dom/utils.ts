@@ -21,8 +21,11 @@ export function getDomOffset(dom: any): Object {
     }
   }
 
-export function parserSvgString (str: string) {
+export function parserSvgString (str: string, id?: string) {
   var root = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  if (id) {
+    root.setAttribute('id', id)
+  }
   root.innerHTML = str.trim();
   return root;
 }

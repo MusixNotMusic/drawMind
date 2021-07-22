@@ -1,7 +1,6 @@
 import MouseEvent from '../event/MouseEvent'
 import { Plane } from '../entity/plane'
 import { ghostArrowProps, arrowProps } from '../constants/defaultsProps'
-
 export default class Arrow extends MouseEvent{
    private mouseDown = false;
    private startX = 0;
@@ -14,15 +13,15 @@ export default class Arrow extends MouseEvent{
    public svgDom: any;
    private plane: any = null;
    private points: any = [];
-   constructor (svgDom: any) {
-     super(svgDom)
-     this.svgDom = svgDom
-    //  this.plane = new Plane({ cmd: 'arrow' })
+   private panel: any;
+   constructor (panel: any) {
+     super(panel.svgDom)
+     this.panel = panel
+     this.svgDom = panel.svgDom
    }
 
   startHandler (e: any): void {
     e.preventDefault()
-    // console.log(e, e.offsetX, e.offsetY)
     this.mouseDown = true
     this.startX = this.getOffsetX(e)
     this.startY = this.getOffsetY(e)
@@ -57,7 +56,8 @@ export default class Arrow extends MouseEvent{
       this.endY = this.getOffsetY(e)
       if (this.startX !== this.endX || this.startY !== this.endY) {
         this.points.push([this.endX, this.endY])
-        this.svgDom.append(this.plane.updateDom(this.points, arrowProps))
+        this.target = this.svgDom.append(this.plane.updateDom(this.points, arrowProps))
+        this.panel.$eventemit.emit('draw-finish', {target: this.target, points: this.points, cmd: 'arrow'}, this)
       }
       this.placeholderX = 0
       this.placeholderY = 0

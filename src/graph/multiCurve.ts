@@ -16,9 +16,11 @@ export default class MultiCurve extends MouseEvent{
    public svgDom: any;
    private plane: any = null;
    private points: any = [];
-   constructor (svgDom: any) {
-    super(svgDom)
-    this.svgDom = svgDom
+   private panel: any;
+   constructor (panel: any) {
+    super(panel.svgDom)
+    this.panel = panel
+    this.svgDom = panel.svgDom
    }
 
 
@@ -63,6 +65,7 @@ export default class MultiCurve extends MouseEvent{
         this.mouseDown = false
         this.drawing = false
         this.plane.updateDom(this.points, loopCurveProps)
+        this.panel.$eventemit.emit('draw-finish', {target: this.target, points: this.points, cmd: 'loopCurve'}, this)
         this.target = null
         this.plane = null
         this.points = []
