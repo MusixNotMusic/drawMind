@@ -125,3 +125,10 @@ export const loopCurveProps = {
     stroke: '#000',
     strokeWidth: '2'
 }
+
+export const MoveProps = {
+    fill: '#2d2d2d',
+    opacity: '0.2',
+    stroke: '#2d2d2d',
+    strokeWidth: '1.5'
+}

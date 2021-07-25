@@ -20,7 +20,7 @@ export default class MouseDefault {
             if (e.target) {
                 let dom = this.mem.find(e.target)
                 if (dom) {
-                    SelectedRect.drawOutline(dom, null, 'outline')
+                    SelectedRect.drawOutline(this.panel, dom, null, 'outline')
                     this.panel.$eventemit.emit('target-selected', dom)
                 }
             }

@@ -44,6 +44,12 @@ export class Plane {
         this.d = ''
     }
 
+    setOptions (options: any) {
+        this.points = options.points || this.points
+        this.target = options.target || this.target
+        this.cmd = options.cmd || this.cmd
+    }
+
     definePathByCmd (points?: any, cmd?: string) {
         let _cmd = cmd || this.cmd
         let _points = points || this.points
@@ -78,9 +84,11 @@ export class Plane {
         return this.target
     }
 
-    updateDom (points: any, props: string[]) {
+    updateDom (points: any, props?: string[]) {
         this.updatePath(points)
-        this.updateProps(props)
+        if (props) {
+            this.updateProps(props)
+        }
         return this.target
     }
 

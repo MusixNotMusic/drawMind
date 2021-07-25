@@ -1,14 +1,13 @@
 import * as d3 from 'd3'
-// import Lifecycle from './event/Lifecycle'
 import { EventEmitter } from 'eventemitter3'
-import { drawGridBackground } from "./graph/grid";
-import Line from './graph/line'
-import Arrow from './graph/arrow'
-import ElbowLink from './graph/elbowLink'
-import CurveLink from './graph/curveLink'
-import MultiLine from './graph/multiLine'
-import MultiCurve from './graph/multiCurve'
-import MouseDefault from './graph/default'
+import { drawGridBackground } from "./action/grid";
+import Line from './action/line'
+import Arrow from './action/arrow'
+import ElbowLink from './action/elbowLink'
+import CurveLink from './action/curveLink'
+import MultiLine from './action/multiLine'
+import MultiCurve from './action/multiCurve'
+import MouseDefault from './action/point'
 import Memory from './store/mem'
 
 // 
@@ -39,6 +38,7 @@ export default class Panel {
     // draw background
     this.drawBackground(clientWidth, clientHeight)
     window.addEventListener('resize', this.resize.bind(this), false)
+    this.registerEvent()
  }
 
  createSvgDom(viewBoxWidth: number, viewBoxHeight: number) {
@@ -104,6 +104,15 @@ export default class Panel {
             break;
     }
     this.drawInstance.registerEvent()
+ }
+
+ registerEvent() {
+    this.$eventemit.on('selected-move-done', () => {
+        let dom = this.svgDom.querySelector('#outline')
+        if (dom) {
+         dom.remove()
+        }
+    }, this)
  }
 
  destroy () {

@@ -1,4 +1,5 @@
 import { parserSvgString } from '../dom/utils'
+import Move from '../action/move'
 export default class SelectedRect {
     /**
      * 
@@ -7,7 +8,7 @@ export default class SelectedRect {
      * @param target 
      * @param d 
      */
-    static drawOutline (mem: any, d?: string, id?: string) {
+    static drawOutline (panel: any; mem: any, d?: string, id?: string) {
         let target = mem.target.querySelector('.plane')
         let { 
             x1,
@@ -44,8 +45,17 @@ export default class SelectedRect {
         }
         let outlineSVGDom = parserSvgString(htmlStr, id)
         document.body.querySelector('svg').append(outlineSVGDom)
+        const move = new Move(panel, mem)
+        move.registerEvent()
     }
 }
+
+
+function regsiterEvent (panel: any, mem: any) {
+   const move = new Move(panel, mem)
+   move.registerEvent()
+}
+
 function getOutlineRectPosition (target: SVGAElement) {
     let rect = target.getBBox()
     let margin = { top: 1, right: 1, bottom: 1, left: 1}

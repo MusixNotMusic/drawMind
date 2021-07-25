@@ -1,4 +1,3 @@
-import * as d3 from 'd3'
 import Lifecycle from '../event/Lifecycle'
 import MouseEvent from '../event/MouseEvent'
 import { Plane } from '../entity/plane'
