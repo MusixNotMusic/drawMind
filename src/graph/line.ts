@@ -68,9 +68,10 @@ export default class Line extends MouseEvent implements Lifecycle {
       this.endY = this.getOffsetY(e)
       if (this.startX !== this.endX || this.startY !== this.endY) {
         this.points.push([this.endX, this.endY])
-        this.svgDom.append(this.plane.updateDom(this.points, lineProps))
+        this.target = this.plane.updateDom(this.points, lineProps)
         this.panel.$eventemit.emit('draw-finish', {target: this.target, points: this.points, cmd: 'line'}, this)
       }
+      this.svgDom.append(this.target)
       this.placeholderX = 0
       this.placeholderY = 0
       this.endX = 0

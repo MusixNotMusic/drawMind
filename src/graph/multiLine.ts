@@ -64,7 +64,7 @@ export default class MultiLine extends MouseEvent{
       if (nearByRadius(this.points[0][0], this.points[0][1], this.endX, this.endY)) {
         this.mouseDown = false
         this.drawing = false
-        this.plane.updateDom(this.points, loopLineProps)
+        this.target = this.plane.updateDom(this.points, loopLineProps)
         this.panel.$eventemit.emit('draw-finish', {target: this.target, points: this.points, cmd: 'loopLine'}, this)
         this.target = null
         this.plane = null

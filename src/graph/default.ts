@@ -4,8 +4,10 @@ import SelectedRect from '../entity/selected'
 export default class MouseDefault {
    private svgDom: any;
    private mem: any;
+   private panel: any;
    constructor (panel: any, mem: any) {
     this.svgDom = panel.svgDom
+    this.panel = panel
     this.mem = mem
    }
 
@@ -18,7 +20,8 @@ export default class MouseDefault {
             if (e.target) {
                 let dom = this.mem.find(e.target)
                 if (dom) {
-                    SelectedRect.drawOutline(e.target, null, 'outline')
+                    SelectedRect.drawOutline(dom, null, 'outline')
+                    this.panel.$eventemit.emit('target-selected', dom)
                 }
             }
         })
